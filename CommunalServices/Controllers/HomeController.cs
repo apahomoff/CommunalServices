@@ -10,6 +10,8 @@ namespace CommunalServices.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.Title = "Index";
+
             return View();
         }
     }
