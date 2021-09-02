@@ -1,0 +1,9 @@
+﻿@model Street
+
+<h6>Вы уверены, что хотите удалить улицу "@Model.Name"?</h6>
+
+<form asp-action="Delete">
+    <input type="submit" value="Удалить" class="btn btn-primary" />
+</form>
+
+<a asp-controller="Streets" asp-action="Index">Назад</a>
