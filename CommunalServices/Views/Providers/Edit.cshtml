@@ -1,6 +1,6 @@
-﻿@model Street
+﻿@model Provider
 
-<h4>Редактирование улицы</h4>
+<h4>Редактирование поставщика</h4>
 
 <div class="row">
     <div class="col-md-4">
@@ -11,13 +11,13 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-primary"/>
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<a asp-controller="Streets" asp-action="Index">Назад</a>
+<a asp-controller="Providers" asp-action="Index">Назад</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>

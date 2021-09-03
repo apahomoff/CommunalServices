@@ -1,0 +1,23 @@
+﻿@model IEnumerable<NormGigacalorie>
+
+<h4>Нормативы гигакалорий</h4>
+
+<a asp-controller="NormGigacalories" asp-action="Create" title="Добавить"><img src="/images/New32.png" /></a>
+
+<table class="table">
+    <tr>
+        <td><b>Значение</b></td>
+        <td><b>Год</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Value</td>
+            <td>@item.Year</td>
+            <td><a asp-controller="NormGigacalories" asp-action="Edit" asp-route-id="@item.Id" title="Редактировать"><img src="/images/Edit16.png"/></a></td>
+            <td><a asp-controller="NormGigacalories" asp-action="Delete" asp-route-id="@item.Id" title="Удалить"><img src="/images/Delete16.png"/></a></td>
+        </tr>
+    }
+</table>

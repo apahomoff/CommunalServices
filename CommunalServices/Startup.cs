@@ -46,7 +46,9 @@ namespace CommunalServices
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Providers}/{action=Index}/{id?}");
             });
         }
     }

@@ -1,0 +1,9 @@
+﻿@model Measure
+
+<h6>Вы уверены, что хотите удалить единицу измерения "@Model.Name"?</h6>
+
+<form asp-action="Delete">
+    <input type="submit" value="Удалить" class="btn btn-primary" />
+</form>
+
+<a asp-controller="Measures" asp-action="Index">Назад</a>

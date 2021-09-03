@@ -9,35 +9,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CommunalServices.Controllers
 {
-    public class StreetsController : Controller
+    public class ProvidersController : Controller
     {
         private AppDbContext db;
 
-        public StreetsController(AppDbContext db) => this.db = db;
+        public ProvidersController(AppDbContext db) => this.db = db;
 
         public IActionResult Index()
         {
-            return View(db.Streets.ToList());
+            return View(db.Providers.ToList());
         }
-
+        
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Street street)
+        public IActionResult Create(Provider provider)
         {
-            if (TryValidateModel(street))
+            if (TryValidateModel(provider))
             {
-                db.Streets.Add(street);
+                db.Providers.Add(provider);
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(street);
+                return View(provider);
             }
         }
 
@@ -48,29 +48,29 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Street street = db.Streets.Find(id);
+            Provider provider = db.Providers.Find(id);
 
-            if (street == null)
+            if (provider == null)
             {
                 return NotFound();
             }
 
-            return View(street);
+            return View(provider);
         }
 
         [HttpPost]
-        public IActionResult Edit(Street street)
+        public IActionResult Edit(Provider provider)
         {
-            if (TryValidateModel(street))
+            if (TryValidateModel(provider))
             {
-                db.Entry(street).State = EntityState.Modified;
+                db.Entry(provider).State = EntityState.Modified;
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(street);
+                return View(provider);
             }
         }
 
@@ -81,25 +81,25 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Street street = db.Streets.Find(id);
+            Provider provider = db.Providers.Find(id);
 
-            if (street == null)
+            if (provider == null)
             {
                 return NotFound();
             }
 
-            return View(street);
+            return View(provider);
         }
 
         [HttpPost]
-        public IActionResult Delete(Street street)
+        public IActionResult Delete(Provider provider)
         {
-            if (street == null)
+            if (provider == null)
             {
                 return BadRequest();
             }
 
-            db.Streets.Remove(street);
+            db.Providers.Remove(provider);
             db.SaveChanges();
 
             return RedirectToAction("Index");

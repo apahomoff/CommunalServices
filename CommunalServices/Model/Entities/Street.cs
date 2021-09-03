@@ -11,7 +11,7 @@ namespace CommunalServices.Model.Entities
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Название улицы не может быть пустым.")]
-        [StringLength(100, ErrorMessage = "Название улицы не может содержать более 100 символов.")]
+        [StringLength(100)]
         [Display(Name = "Название")]
         public string Name { get; set; }
         public List<House> Houses { get; set; }

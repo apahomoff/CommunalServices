@@ -1,23 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CommunalServices.Model.EF;
+using CommunalServices.Model.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CommunalServices.Model.EF;
-using CommunalServices.Model.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace CommunalServices.Controllers
 {
-    public class StreetsController : Controller
+    public class MeasuresController : Controller
     {
         private AppDbContext db;
 
-        public StreetsController(AppDbContext db) => this.db = db;
+        public MeasuresController(AppDbContext db) => this.db = db;
 
         public IActionResult Index()
         {
-            return View(db.Streets.ToList());
+            return View(db.Measures.ToList());
         }
 
         public IActionResult Create()
@@ -26,18 +26,18 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Street street)
+        public IActionResult Create(Measure measure)
         {
-            if (TryValidateModel(street))
+            if (TryValidateModel(measure))
             {
-                db.Streets.Add(street);
+                db.Measures.Add(measure);
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(street);
+                return View(measure);
             }
         }
 
@@ -48,29 +48,29 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Street street = db.Streets.Find(id);
+            Measure measure = db.Measures.Find(id);
 
-            if (street == null)
+            if (measure == null)
             {
                 return NotFound();
             }
 
-            return View(street);
+            return View(measure);
         }
 
         [HttpPost]
-        public IActionResult Edit(Street street)
+        public IActionResult Edit(Measure measure)
         {
-            if (TryValidateModel(street))
+            if (TryValidateModel(measure))
             {
-                db.Entry(street).State = EntityState.Modified;
+                db.Entry(measure).State = EntityState.Modified;
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(street);
+                return View(measure);
             }
         }
 
@@ -81,25 +81,25 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Street street = db.Streets.Find(id);
+            Measure measure = db.Measures.Find(id);
 
-            if (street == null)
+            if (measure == null)
             {
                 return NotFound();
             }
 
-            return View(street);
+            return View(measure);
         }
 
         [HttpPost]
-        public IActionResult Delete(Street street)
+        public IActionResult Delete(Measure measure)
         {
-            if (street == null)
+            if (measure == null)
             {
                 return BadRequest();
             }
 
-            db.Streets.Remove(street);
+            db.Measures.Remove(measure);
             db.SaveChanges();
 
             return RedirectToAction("Index");
