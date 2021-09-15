@@ -8,15 +8,34 @@
 </head>
 <body class="card-body">
     <header>
-        <h2>Коммунальные услуги</h2>
-        <a asp-controller="Providers" asp-action="Index">Поставщики</a> |
-        <a asp-controller="NormGigacalories" asp-action="Index">Нормативы гигакалорий</a> |
-        <a asp-controller="Streets" asp-action="Index">Улицы</a> |
-        <a asp-controller="Measures" asp-action="Index">Единицы измерения</a>
-        <hr />
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <h2>Коммунальные услуги</h2>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ServiceTypes" asp-action="Index">Виды услуг</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Providers" asp-action="Index">Поставщики</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="NormGigacalories" asp-action="Index">Нормативы гигакалорий</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Streets" asp-action="Index">Улицы</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Measures" asp-action="Index">Единицы измерения</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
 
-    <div id="main">
+    <div id="main" class="container">
         @RenderBody()
     </div>
     <footer>
