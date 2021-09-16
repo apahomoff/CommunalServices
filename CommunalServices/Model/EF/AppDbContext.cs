@@ -18,7 +18,7 @@ namespace CommunalServices.Model.EF
         public DbSet<ServiceHouse> ServiceHouses { get; set; }
         public DbSet<RegistrationValue> RegistrationValues { get; set; }
         public DbSet<Provider> Providers { get; set; }
-        public DbSet<Provider> ServiceProviders { get; set; }
+        public DbSet<ServiceProvider> ServiceProviders { get; set; }
         public DbSet<Tariff> Tariffs { get; set; }
         public DbSet<NormGigacalorie> NormGigacalories { get; set; }
 
