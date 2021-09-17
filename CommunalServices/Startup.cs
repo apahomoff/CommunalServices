@@ -48,7 +48,7 @@ namespace CommunalServices
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Providers}/{action=Index}/{id?}");
+                    pattern: "{controller=ServiceTypes}/{action=Index}/{id?}");
             });
         }
     }

@@ -1,0 +1,37 @@
+﻿@model ServiceProvider
+
+<h4>Редактирование поставщика услуги</h4>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div class="form-group">
+                <label asp-for="ProviderId" class="control-label"></label>
+                <select asp-for="ProviderId" class="form-control" asp-items="ViewBag.ProviderId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinishDate" class="control-label"></label>
+                <input asp-for="FinishDate" class="form-control" />
+                <span asp-validation-for="FinishDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ServiceTypeId" type="hidden" value="@ViewBag.serviceTypeId" class="form-control" />
+                <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<a asp-controller="ServiceTypes" asp-action="Details" asp-route-id="@ViewBag.serviceTypeId">Назад</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>

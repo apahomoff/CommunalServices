@@ -1,0 +1,16 @@
+﻿@model IEnumerable<ServiceType>
+
+<h4>Виды услуг</h4>
+
+<a asp-action="Create"><img src="/images/New16.png" /> Добавить</a>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td><a asp-action="Details" asp-route-id="@item.Id" title="Подробно"><img src="/images/Details16.png" /></a></td>
+            <td><a asp-action="Delete" asp-route-id="@item.Id" title="Удалить"><img src="/images/Delete16.png" /></a></td>
+        </tr>
+    }
+</table>

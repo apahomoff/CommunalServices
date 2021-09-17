@@ -1,0 +1,33 @@
+﻿@model ServiceType
+
+<p><h5>Поставщики услуги</h5></p>
+
+<a asp-controller="ServiceProviders" asp-action="Create" asp-route-serviceTypeId="@Model.Id"><img src="/images/New16.png" /> Добавить</a>
+
+<table class="table">
+    <tr>
+        <td><b>Наименование</b></td>
+        <td><b>Дата начала</b></td>
+        <td><b>Дата окончания</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    @foreach (var serviceProvider in Model.ServiceProviders)
+    {
+        <tr>
+            <td>@Html.DisplayFor(m => serviceProvider.Provider.Name)</td>
+            <td>@Html.DisplayFor(m => serviceProvider.StartDate)</td>
+            <td>@Html.DisplayFor(m => serviceProvider.FinishDate)</td>
+            <td>
+                <a asp-controller="ServiceProviders" asp-action="Edit" asp-route-id="@serviceProvider.Id" asp-route-serviceTypeId="@Model.Id" title="Редактировать">
+                    <img src="/images/Edit16.png" />
+                </a>
+            </td>
+            <td>
+                <a asp-controller="ServiceProviders" asp-action="Delete" asp-route-id="@serviceProvider.Id" asp-route-serviceTypeId="@Model.Id" title="Удалить">
+                    <img src="/images/Delete16.png" />
+                </a>
+            </td>
+        </tr>
+    }
+</table>
