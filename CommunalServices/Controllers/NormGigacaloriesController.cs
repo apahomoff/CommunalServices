@@ -15,9 +15,9 @@ namespace CommunalServices.Controllers
 
         public NormGigacaloriesController(AppDbContext db) => this.db = db;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(db.NormGigacalories.ToList());
+            return View(await db.NormGigacalories.ToListAsync());
         }
 
         public IActionResult Create()
@@ -26,13 +26,13 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(NormGigacalorie normGigacalorie)
+        public async Task<IActionResult> Create(NormGigacalorie normGigacalorie)
         {
             // TODO Разобраться с валидацией float
             if (TryValidateModel(normGigacalorie))
             {
-                db.NormGigacalories.Add(normGigacalorie);
-                db.SaveChanges();
+                await db.NormGigacalories.AddAsync(normGigacalorie);
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -42,14 +42,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            NormGigacalorie normGigacalorie = db.NormGigacalories.Find(id);
+            NormGigacalorie normGigacalorie = await db.NormGigacalories.FindAsync(id);
 
             if (normGigacalorie == null)
             {
@@ -60,13 +60,13 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(NormGigacalorie normGigacalorie)
+        public async Task<IActionResult> Edit(NormGigacalorie normGigacalorie)
         {
             // TODO Разобраться с валидацией float
             if (TryValidateModel(normGigacalorie))
             {
                 db.Entry(normGigacalorie).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -76,14 +76,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            NormGigacalorie normGigacalorie = db.NormGigacalories.Find(id);
+            NormGigacalorie normGigacalorie = await db.NormGigacalories.FindAsync(id);
 
             if (normGigacalorie == null)
             {
@@ -94,7 +94,7 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(NormGigacalorie normGigacalorie)
+        public async Task<IActionResult> Delete(NormGigacalorie normGigacalorie)
         {
             if (normGigacalorie == null)
             {
@@ -102,7 +102,7 @@ namespace CommunalServices.Controllers
             }
 
             db.NormGigacalories.Remove(normGigacalorie);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

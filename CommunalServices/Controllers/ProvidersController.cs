@@ -15,9 +15,9 @@ namespace CommunalServices.Controllers
 
         public ProvidersController(AppDbContext db) => this.db = db;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(db.Providers.ToList());
+            return View(await db.Providers.ToListAsync());
         }
         
         public IActionResult Create()
@@ -26,12 +26,12 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Provider provider)
+        public async Task<IActionResult> Create(Provider provider)
         {
             if (TryValidateModel(provider))
             {
-                db.Providers.Add(provider);
-                db.SaveChanges();
+                await db.Providers.AddAsync(provider);
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -41,14 +41,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            Provider provider = db.Providers.Find(id);
+            Provider provider = await db.Providers.FindAsync(id);
 
             if (provider == null)
             {
@@ -59,12 +59,12 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Provider provider)
+        public async Task<IActionResult> Edit(Provider provider)
         {
             if (TryValidateModel(provider))
             {
                 db.Entry(provider).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -74,14 +74,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            Provider provider = db.Providers.Find(id);
+            Provider provider = await db.Providers.FindAsync(id);
 
             if (provider == null)
             {
@@ -92,7 +92,7 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Provider provider)
+        public async Task<IActionResult> Delete(Provider provider)
         {
             if (provider == null)
             {
@@ -100,7 +100,7 @@ namespace CommunalServices.Controllers
             }
 
             db.Providers.Remove(provider);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

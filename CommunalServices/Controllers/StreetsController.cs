@@ -15,9 +15,9 @@ namespace CommunalServices.Controllers
 
         public StreetsController(AppDbContext db) => this.db = db;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(db.Streets.ToList());
+            return View(await db.Streets.ToListAsync());
         }
 
         public IActionResult Create()
@@ -26,12 +26,12 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Street street)
+        public async Task<IActionResult> Create(Street street)
         {
             if (TryValidateModel(street))
             {
-                db.Streets.Add(street);
-                db.SaveChanges();
+                await db.Streets.AddAsync(street);
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -41,14 +41,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            Street street = db.Streets.Find(id);
+            Street street = await db.Streets.FindAsync(id);
 
             if (street == null)
             {
@@ -59,12 +59,12 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Street street)
+        public async Task<IActionResult> Edit(Street street)
         {
             if (TryValidateModel(street))
             {
                 db.Entry(street).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -74,14 +74,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            Street street = db.Streets.Find(id);
+            Street street = await db.Streets.FindAsync(id);
 
             if (street == null)
             {
@@ -92,7 +92,7 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Street street)
+        public async Task<IActionResult> Delete(Street street)
         {
             if (street == null)
             {
@@ -100,7 +100,7 @@ namespace CommunalServices.Controllers
             }
 
             db.Streets.Remove(street);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

@@ -15,9 +15,9 @@ namespace CommunalServices.Controllers
 
         public MeasuresController(AppDbContext db) => this.db = db;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(db.Measures.ToList());
+            return View(await db.Measures.ToListAsync());
         }
 
         public IActionResult Create()
@@ -26,12 +26,12 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Measure measure)
+        public async Task<IActionResult> Create(Measure measure)
         {
             if (TryValidateModel(measure))
             {
-                db.Measures.Add(measure);
-                db.SaveChanges();
+                await db.Measures.AddAsync(measure);
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -41,14 +41,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            Measure measure = db.Measures.Find(id);
+            Measure measure = await db.Measures.FindAsync(id);
 
             if (measure == null)
             {
@@ -59,12 +59,12 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Measure measure)
+        public async Task<IActionResult> Edit(Measure measure)
         {
             if (TryValidateModel(measure))
             {
                 db.Entry(measure).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
@@ -74,14 +74,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            Measure measure = db.Measures.Find(id);
+            Measure measure = await db.Measures.FindAsync(id);
 
             if (measure == null)
             {
@@ -92,7 +92,7 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Measure measure)
+        public async Task<IActionResult> Delete(Measure measure)
         {
             if (measure == null)
             {
@@ -100,7 +100,7 @@ namespace CommunalServices.Controllers
             }
 
             db.Measures.Remove(measure);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
