@@ -98,7 +98,7 @@ namespace CommunalServices.Controllers
                 await db.SaveChangesAsync();
                 //ViewBag.id = serviceType.Id;
 
-                return View("Details", serviceType);
+                return RedirectToAction("Details", serviceType);
             }
             else
             {
