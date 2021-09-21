@@ -5,6 +5,8 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="ServiceTypeId" type="hidden" />
             <div class="form-group">
                 <label asp-for="ProviderId" class="control-label"></label>
                 <select asp-for="ProviderId" class="form-control" asp-items="ViewBag.ProviderId"></select>
@@ -20,17 +22,13 @@
                 <span asp-validation-for="FinishDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="ServiceTypeId" type="hidden" value="@ViewBag.serviceTypeId" class="form-control" />
-                <span asp-validation-for="ServiceTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<a asp-controller="ServiceTypes" asp-action="Details" asp-route-id="@ViewBag.serviceTypeId">Назад</a>
+<a asp-controller="ServiceTypes" asp-action="Details" asp-route-id="@Model.ServiceTypeId">Назад</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>

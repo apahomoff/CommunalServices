@@ -96,7 +96,6 @@ namespace CommunalServices.Controllers
             {
                 db.Entry(serviceType).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                //ViewBag.id = serviceType.Id;
 
                 return RedirectToAction("Details", serviceType);
             }

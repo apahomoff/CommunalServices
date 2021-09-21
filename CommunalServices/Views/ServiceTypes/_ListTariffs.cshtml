@@ -19,12 +19,12 @@
             <td>@Html.DisplayFor(m => tariff.StartDate)</td>
             <td>@Html.DisplayFor(m => tariff.FinishDate)</td>
             <td>
-                <a asp-controller="Tariffs" asp-action="Edit" asp-route-id="@tariff.Id" asp-route-serviceTypeId="@Model.Id" title="Редактировать">
+                <a asp-controller="Tariffs" asp-action="Edit" asp-route-id="@tariff.Id" title="Редактировать">
                     <img src="/images/Edit16.png"/>
                 </a>
             </td>
             <td>
-                <a asp-controller="Tariffs" asp-action="Delete" asp-route-id="@tariff.Id" asp-route-serviceTypeId="@Model.Id" title="Удалить">
+                <a asp-controller="Tariffs" asp-action="Delete" asp-route-id="@tariff.Id" title="Удалить">
                     <img src="/images/Delete16.png"/>
                 </a>
             </td>

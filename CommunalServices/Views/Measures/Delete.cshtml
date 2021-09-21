@@ -3,6 +3,7 @@
 <h6>Вы уверены, что хотите удалить единицу измерения "@Model.Name"?</h6>
 
 <form asp-action="Delete">
+    <input asp-for="Id" type="hidden" />
     <input type="submit" value="Удалить" class="btn btn-danger" />
 </form>
 

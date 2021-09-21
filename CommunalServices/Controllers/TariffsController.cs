@@ -22,7 +22,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            ViewBag.serviceTypeId = serviceTypeId.Value;
+            ViewBag.ServiceTypeId = serviceTypeId.Value;
 
             return View();
         }
@@ -40,14 +40,14 @@ namespace CommunalServices.Controllers
             }
             else
             {
-                ViewBag.serviceTypeId = tariff.ServiceTypeId;
+                ViewBag.ServiceTypeId = tariff.ServiceTypeId;
                 return View(tariff);
             }
         }
 
-        public async Task<IActionResult> Edit(int? id, int? serviceTypeId)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || serviceTypeId == null)
+            if (id == null)
             {
                 return BadRequest();
             }
@@ -59,8 +59,6 @@ namespace CommunalServices.Controllers
                 return NotFound();
             }
 
-            ViewBag.serviceTypeId = serviceTypeId.Value;
-
             return View(tariff);
         }
 
@@ -70,11 +68,6 @@ namespace CommunalServices.Controllers
             // TODO Разобраться с валидацией float
             if (TryValidateModel(tariff))
             {
-                if (tariff.ServiceTypeId == 0)
-                {
-                    return BadRequest();
-                }
-
                 db.Entry(tariff).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
@@ -87,16 +80,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public async Task<IActionResult> Delete(int? id, int? serviceTypeId)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || serviceTypeId == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
-            Tariff tariff = await db.Tariffs
-                .Include(t => t.ServiceType)
-                .FirstOrDefaultAsync(t => t.Id == id);
+            Tariff tariff = await db.Tariffs.FindAsync(id);
 
             if (tariff == null)
             {
@@ -109,7 +100,7 @@ namespace CommunalServices.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Tariff tariff)
         {
-            if (tariff == null || tariff.ServiceTypeId == 0)
+            if (tariff == null)
             {
                 return BadRequest();
             }

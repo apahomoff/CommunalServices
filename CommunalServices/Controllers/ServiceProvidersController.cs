@@ -23,7 +23,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            ViewBag.serviceTypeId = serviceTypeId.Value;
+            ViewBag.ServiceTypeId = serviceTypeId.Value;
             ViewBag.ProviderId = new SelectList(db.Providers, "Id", "Name");
 
             return View();
@@ -41,14 +41,14 @@ namespace CommunalServices.Controllers
             }
             else
             {
-                ViewBag.serviceTypeId = serviceProvider.ServiceTypeId;
+                ViewBag.ServiceTypeId = serviceProvider.ServiceTypeId;
                 return View(serviceProvider);
             }
         }
 
-        public async Task<IActionResult> Edit(int? id, int? serviceTypeId)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || serviceTypeId == null)
+            if (id == null)
             {
                 return BadRequest();
             }
@@ -60,7 +60,6 @@ namespace CommunalServices.Controllers
                 return NotFound();
             }
 
-            ViewBag.serviceTypeId = serviceTypeId.Value;
             ViewBag.ProviderId = new SelectList(db.Providers, "Id", "Name");
 
             return View(serviceProvider);
@@ -71,11 +70,6 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(serviceProvider))
             {
-                if (serviceProvider.ServiceTypeId == 0)
-                {
-                    return BadRequest();
-                }
-
                 db.Entry(serviceProvider).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
@@ -83,20 +77,18 @@ namespace CommunalServices.Controllers
             }
             else
             {
-                ViewBag.serviceTypeId = serviceProvider.ServiceTypeId;
                 return View(serviceProvider);
             }
         }
 
-        public async Task<IActionResult> Delete(int? id, int? serviceTypeId)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || serviceTypeId == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
             ServiceProvider serviceProvider = await db.ServiceProviders
-                .Include(sp => sp.ServiceType)
                 .Include(sp => sp.Provider)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -111,7 +103,7 @@ namespace CommunalServices.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(ServiceProvider serviceProvider)
         {
-            if (serviceProvider == null || serviceProvider.ServiceTypeId == 0)
+            if (serviceProvider == null)
             {
                 return BadRequest();
             }
