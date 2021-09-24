@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using CommunalServices.Model.EF;
 using CommunalServices.Model.Entities;
 using Microsoft.EntityFrameworkCore;
+using CommunalServices.Model;
 
 namespace CommunalServices.Controllers
 {
     public class StreetsController : Controller
     {
-        private AppDbContext db;
+        private IRepository repository;
 
-        public StreetsController(AppDbContext db) => this.db = db;
+        public StreetsController(IRepository repository) => this.repository = repository;
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.Streets.ToListAsync());
+            return View(await repository.GetAllAsync<Street>());
         }
 
         public IActionResult Create()
@@ -30,9 +31,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(street))
             {
-                await db.Streets.AddAsync(street);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(street);
                 return RedirectToAction("Index");
             }
             else
@@ -48,7 +47,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Street street = await db.Streets.FindAsync(id);
+            var street = await repository.GetAsync<Street>(id.Value);
 
             if (street == null)
             {
@@ -63,9 +62,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(street))
             {
-                db.Entry(street).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(street);
                 return RedirectToAction("Index");
             }
             else
@@ -81,7 +78,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Street street = await db.Streets.FindAsync(id);
+            var street = await repository.GetAsync<Street>(id.Value);
 
             if (street == null)
             {
@@ -99,8 +96,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            db.Streets.Remove(street);
-            await db.SaveChangesAsync();
+            await repository.RemoveAsync(street);
 
             return RedirectToAction("Index");
         }

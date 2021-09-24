@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using CommunalServices.Model.EF;
 using CommunalServices.Model.Entities;
 using Microsoft.EntityFrameworkCore;
+using CommunalServices.Model;
 
 namespace CommunalServices.Controllers
 {
     public class ProvidersController : Controller
     {
-        private AppDbContext db;
+        private IRepository repository;
 
-        public ProvidersController(AppDbContext db) => this.db = db;
+        public ProvidersController(IRepository repository) => this.repository = repository;
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.Providers.ToListAsync());
+            return View(await repository.GetAllAsync<Provider>());
         }
         
         public IActionResult Create()
@@ -30,9 +31,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(provider))
             {
-                await db.Providers.AddAsync(provider);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(provider);
                 return RedirectToAction("Index");
             }
             else
@@ -48,7 +47,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Provider provider = await db.Providers.FindAsync(id);
+            var provider = await repository.GetAsync<Provider>(id.Value);
 
             if (provider == null)
             {
@@ -63,9 +62,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(provider))
             {
-                db.Entry(provider).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(provider);
                 return RedirectToAction("Index");
             }
             else
@@ -81,7 +78,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Provider provider = await db.Providers.FindAsync(id);
+            var provider = await repository.GetAsync<Provider>(id.Value);
 
             if (provider == null)
             {
@@ -99,8 +96,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            db.Providers.Remove(provider);
-            await db.SaveChangesAsync();
+            await repository.RemoveAsync(provider);
 
             return RedirectToAction("Index");
         }

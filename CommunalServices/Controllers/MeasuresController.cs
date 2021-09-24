@@ -1,4 +1,5 @@
-﻿using CommunalServices.Model.EF;
+﻿using CommunalServices.Model;
+using CommunalServices.Model.EF;
 using CommunalServices.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +12,13 @@ namespace CommunalServices.Controllers
 {
     public class MeasuresController : Controller
     {
-        private AppDbContext db;
+        private IRepository repository;
 
-        public MeasuresController(AppDbContext db) => this.db = db;
+        public MeasuresController(IRepository repository) => this.repository = repository;
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.Measures.ToListAsync());
+            return View(await repository.GetAllAsync<Measure>());
         }
 
         public IActionResult Create()
@@ -30,9 +31,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(measure))
             {
-                await db.Measures.AddAsync(measure);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(measure);
                 return RedirectToAction("Index");
             }
             else
@@ -48,7 +47,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Measure measure = await db.Measures.FindAsync(id);
+            var measure = await repository.GetAsync<Measure>(id.Value);
 
             if (measure == null)
             {
@@ -63,9 +62,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(measure))
             {
-                db.Entry(measure).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(measure);
                 return RedirectToAction("Index");
             }
             else
@@ -81,7 +78,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Measure measure = await db.Measures.FindAsync(id);
+            var measure = await repository.GetAsync<Measure>(id.Value);
 
             if (measure == null)
             {
@@ -99,8 +96,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            db.Measures.Remove(measure);
-            await db.SaveChangesAsync();
+            await repository.RemoveAsync(measure);
 
             return RedirectToAction("Index");
         }

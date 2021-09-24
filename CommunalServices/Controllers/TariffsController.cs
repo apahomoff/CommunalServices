@@ -6,14 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunalServices.Model.Entities;
 using Microsoft.EntityFrameworkCore;
+using CommunalServices.Model;
 
 namespace CommunalServices.Controllers
 {
     public class TariffsController : Controller
     {
-        private AppDbContext db;
+        private IRepository repository;
 
-        public TariffsController(AppDbContext db) => this.db = db;
+        public TariffsController(IRepository repository) => this.repository = repository;
 
         public IActionResult Create(int? serviceTypeId)
         {
@@ -33,9 +34,7 @@ namespace CommunalServices.Controllers
             // TODO Разобраться с валидацией float
             if (TryValidateModel(tariff))
             {
-                await db.Tariffs.AddAsync(tariff);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(tariff);
                 return RedirectToAction("Details", "ServiceTypes", new { id = tariff.ServiceTypeId });
             }
             else
@@ -52,7 +51,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Tariff tariff = await db.Tariffs.FindAsync(id);
+            var tariff = await repository.GetAsync<Tariff>(id.Value);
 
             if (tariff == null)
             {
@@ -68,9 +67,7 @@ namespace CommunalServices.Controllers
             // TODO Разобраться с валидацией float
             if (TryValidateModel(tariff))
             {
-                db.Entry(tariff).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(tariff);
                 return RedirectToAction("Details", "ServiceTypes", new {id = tariff.ServiceTypeId});
             }
             else
@@ -87,7 +84,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            Tariff tariff = await db.Tariffs.FindAsync(id);
+            var tariff = await repository.GetAsync<Tariff>(id.Value);
 
             if (tariff == null)
             {
@@ -105,8 +102,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            db.Tariffs.Remove(tariff);
-            await db.SaveChangesAsync();
+            await repository.RemoveAsync(tariff);
 
             return RedirectToAction("Details", "ServiceTypes", new {id = tariff.ServiceTypeId});
         }

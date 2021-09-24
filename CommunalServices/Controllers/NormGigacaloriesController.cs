@@ -1,4 +1,5 @@
-﻿using CommunalServices.Model.EF;
+﻿using CommunalServices.Model;
+using CommunalServices.Model.EF;
 using CommunalServices.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +12,13 @@ namespace CommunalServices.Controllers
 {
     public class NormGigacaloriesController : Controller
     {
-        private AppDbContext db;
+        private IRepository repository;
 
-        public NormGigacaloriesController(AppDbContext db) => this.db = db;
+        public NormGigacaloriesController(IRepository repository) => this.repository = repository;
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.NormGigacalories.ToListAsync());
+            return View(await repository.GetAllAsync<NormGigacalorie>());
         }
 
         public IActionResult Create()
@@ -31,9 +32,7 @@ namespace CommunalServices.Controllers
             // TODO Разобраться с валидацией float
             if (TryValidateModel(normGigacalorie))
             {
-                await db.NormGigacalories.AddAsync(normGigacalorie);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(normGigacalorie);
                 return RedirectToAction("Index");
             }
             else
@@ -49,7 +48,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            NormGigacalorie normGigacalorie = await db.NormGigacalories.FindAsync(id);
+            var normGigacalorie = await repository.GetAsync<NormGigacalorie>(id.Value);
 
             if (normGigacalorie == null)
             {
@@ -65,9 +64,7 @@ namespace CommunalServices.Controllers
             // TODO Разобраться с валидацией float
             if (TryValidateModel(normGigacalorie))
             {
-                db.Entry(normGigacalorie).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(normGigacalorie);
                 return RedirectToAction("Index");
             }
             else
@@ -83,7 +80,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            NormGigacalorie normGigacalorie = await db.NormGigacalories.FindAsync(id);
+            var normGigacalorie = await repository.GetAsync<NormGigacalorie>(id.Value);
 
             if (normGigacalorie == null)
             {
@@ -101,8 +98,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            db.NormGigacalories.Remove(normGigacalorie);
-            await db.SaveChangesAsync();
+            await repository.RemoveAsync(normGigacalorie);
 
             return RedirectToAction("Index");
         }

@@ -4,27 +4,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CommunalServices.Model.Entities;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using CommunalServices.Model;
 
 namespace CommunalServices.Controllers
 {
     public class ServiceTypesController : Controller
     {
+        private IRepository repository;
         private AppDbContext db;
 
-        public ServiceTypesController(AppDbContext db) => this.db = db;
+        public ServiceTypesController(IRepository repository, AppDbContext db)
+        {
+            this.repository = repository;
+            this.db = db;
+        }
 
         public async Task<IActionResult> Index()
         {
-            return View(await db.ServiceTypes.ToListAsync());
+            return View(await repository.GetAllAsync<ServiceType>());
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.MeasureId = new SelectList(db.Measures, "Id", "Name");
+            ViewBag.MeasureId = new SelectList(await repository.GetAllAsync<Measure>(), "Id", "Name");
             return View();
         }
 
@@ -33,9 +40,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(serviceType))
             {
-                await db.ServiceTypes.AddAsync(serviceType);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(serviceType);
                 return RedirectToAction("Index");
             }
             else
@@ -51,11 +56,14 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            ServiceType serviceType = await db.ServiceTypes
-                .Include(s => s.Measure)
-                .Include(s => s.Tariffs)
-                .Include(s => s.ServiceProviders)
-                .FirstOrDefaultAsync(s => s.Id == id);
+            ServiceType serviceType = await repository.FirstOrDefaultAsync(
+                s => s.Id == id, 
+                new List<Expression<Func<ServiceType, object>>>
+                {
+                    {s => s.Measure},
+                    {s => s.Tariffs},
+                    {s => s.ServiceProviders}
+                });
 
             if (serviceType == null)
             {
@@ -64,7 +72,7 @@ namespace CommunalServices.Controllers
 
             foreach (var serviceProvider in serviceType.ServiceProviders)
             {
-                serviceProvider.Provider = await db.Providers.FindAsync(serviceProvider.ProviderId);
+                serviceProvider.Provider = await repository.GetAsync<Provider>(serviceProvider.ProviderId);
             }
 
             return View(serviceType);
@@ -77,14 +85,14 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            ServiceType serviceType = await db.ServiceTypes.FindAsync(id);
+            var serviceType = await repository.GetAsync<ServiceType>(id.Value);
 
             if (serviceType == null)
             {
                 return NotFound();
             }
 
-            ViewBag.MeasureId = new SelectList(db.Measures, "Id", "Name");
+            ViewBag.MeasureId = new SelectList(await repository.GetAllAsync<Measure>(), "Id", "Name");
 
             return View(serviceType);
         }
@@ -94,9 +102,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(serviceType))
             {
-                db.Entry(serviceType).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(serviceType);
                 return RedirectToAction("Details", serviceType);
             }
             else
@@ -105,14 +111,14 @@ namespace CommunalServices.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
 
-            ServiceType serviceType = db.ServiceTypes.Find(id);
+            var serviceType = await repository.GetAsync<ServiceType>(id.Value);
 
             if (serviceType == null)
             {
@@ -123,15 +129,14 @@ namespace CommunalServices.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(ServiceType serviceType)
+        public async Task<IActionResult> Delete(ServiceType serviceType)
         {
             if (serviceType == null)
             {
                 return BadRequest();
             }
 
-            db.ServiceTypes.Remove(serviceType);
-            db.SaveChanges();
+            await repository.RemoveAsync(serviceType);
 
             return RedirectToAction("Index");
         }

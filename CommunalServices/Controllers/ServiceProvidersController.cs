@@ -3,20 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CommunalServices.Model.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using CommunalServices.Model;
 
 namespace CommunalServices.Controllers
 {
     public class ServiceProvidersController : Controller
     {
-        private AppDbContext db;
+        private IRepository repository;
 
-        public ServiceProvidersController(AppDbContext db) => this.db = db;
+        public ServiceProvidersController(IRepository repository) => this.repository = repository;
 
-        public IActionResult Create(int? serviceTypeId)
+        public async Task<IActionResult> Create(int? serviceTypeId)
         {
             if (serviceTypeId == null)
             {
@@ -24,7 +26,7 @@ namespace CommunalServices.Controllers
             }
 
             ViewBag.ServiceTypeId = serviceTypeId.Value;
-            ViewBag.ProviderId = new SelectList(db.Providers, "Id", "Name");
+            ViewBag.ProviderId = new SelectList(await repository.GetAllAsync<Provider>(), "Id", "Name");
 
             return View();
         }
@@ -34,9 +36,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(serviceProvider))
             {
-                await db.ServiceProviders.AddAsync(serviceProvider);
-                await db.SaveChangesAsync();
-
+                await repository.CreateAsync(serviceProvider);
                 return RedirectToAction("Details", "ServiceTypes", new { id = serviceProvider.ServiceTypeId });
             }
             else
@@ -53,14 +53,14 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            ServiceProvider serviceProvider = await db.ServiceProviders.FindAsync(id);
+            var serviceProvider = await repository.GetAsync<ServiceProvider>(id.Value);
 
             if (serviceProvider == null)
             {
                 return NotFound();
             }
 
-            ViewBag.ProviderId = new SelectList(db.Providers, "Id", "Name");
+            ViewBag.ProviderId = new SelectList(await repository.GetAllAsync<Provider>(), "Id", "Name");
 
             return View(serviceProvider);
         }
@@ -70,9 +70,7 @@ namespace CommunalServices.Controllers
         {
             if (TryValidateModel(serviceProvider))
             {
-                db.Entry(serviceProvider).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
+                await repository.EditAsync(serviceProvider);
                 return RedirectToAction("Details", "ServiceTypes", new { id = serviceProvider.ServiceTypeId });
             }
             else
@@ -88,9 +86,10 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            ServiceProvider serviceProvider = await db.ServiceProviders
-                .Include(sp => sp.Provider)
-                .FirstOrDefaultAsync(t => t.Id == id);
+            ServiceProvider serviceProvider = await repository.FirstOrDefaultAsync(
+                sp => sp.Id == id,
+                new List<Expression<Func<ServiceProvider, object>>>
+                {{sp => sp.Provider}});
 
             if (serviceProvider == null)
             {
@@ -108,8 +107,7 @@ namespace CommunalServices.Controllers
                 return BadRequest();
             }
 
-            db.ServiceProviders.Remove(serviceProvider);
-            await db.SaveChangesAsync();
+            await repository.RemoveAsync(serviceProvider);
 
             return RedirectToAction("Details", "ServiceTypes", new { id = serviceProvider.ServiceTypeId });
         }
