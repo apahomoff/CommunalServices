@@ -30,7 +30,7 @@ namespace CommunalServices.Controllers
         public async Task<IActionResult> Create(NormGigacalorie normGigacalorie)
         {
             // TODO Разобраться с валидацией float
-            if (TryValidateModel(normGigacalorie))
+            if (ModelState.IsValid)
             {
                 await repository.CreateAsync(normGigacalorie);
                 return RedirectToAction("Index");
@@ -62,7 +62,7 @@ namespace CommunalServices.Controllers
         public async Task<IActionResult> Edit(NormGigacalorie normGigacalorie)
         {
             // TODO Разобраться с валидацией float
-            if (TryValidateModel(normGigacalorie))
+            if (ModelState.IsValid)
             {
                 await repository.EditAsync(normGigacalorie);
                 return RedirectToAction("Index");

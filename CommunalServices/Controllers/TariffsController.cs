@@ -32,7 +32,7 @@ namespace CommunalServices.Controllers
         public async Task<IActionResult> Create(Tariff tariff)
         {
             // TODO Разобраться с валидацией float
-            if (TryValidateModel(tariff))
+            if (ModelState.IsValid)
             {
                 await repository.CreateAsync(tariff);
                 return RedirectToAction("Details", "ServiceTypes", new { id = tariff.ServiceTypeId });
@@ -65,7 +65,7 @@ namespace CommunalServices.Controllers
         public async Task<IActionResult> Edit(Tariff tariff)
         {
             // TODO Разобраться с валидацией float
-            if (TryValidateModel(tariff))
+            if (ModelState.IsValid)
             {
                 await repository.EditAsync(tariff);
                 return RedirectToAction("Details", "ServiceTypes", new {id = tariff.ServiceTypeId});

@@ -34,7 +34,7 @@ namespace CommunalServices.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ServiceProvider serviceProvider)
         {
-            if (TryValidateModel(serviceProvider))
+            if (ModelState.IsValid)
             {
                 await repository.CreateAsync(serviceProvider);
                 return RedirectToAction("Details", "ServiceTypes", new { id = serviceProvider.ServiceTypeId });
@@ -68,7 +68,7 @@ namespace CommunalServices.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ServiceProvider serviceProvider)
         {
-            if (TryValidateModel(serviceProvider))
+            if (ModelState.IsValid)
             {
                 await repository.EditAsync(serviceProvider);
                 return RedirectToAction("Details", "ServiceTypes", new { id = serviceProvider.ServiceTypeId });

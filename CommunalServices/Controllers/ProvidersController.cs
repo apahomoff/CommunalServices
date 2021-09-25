@@ -29,7 +29,7 @@ namespace CommunalServices.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Provider provider)
         {
-            if (TryValidateModel(provider))
+            if (ModelState.IsValid)
             {
                 await repository.CreateAsync(provider);
                 return RedirectToAction("Index");
@@ -60,7 +60,7 @@ namespace CommunalServices.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Provider provider)
         {
-            if (TryValidateModel(provider))
+            if (ModelState.IsValid)
             {
                 await repository.EditAsync(provider);
                 return RedirectToAction("Index");
