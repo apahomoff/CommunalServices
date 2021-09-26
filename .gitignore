@@ -1,3 +1,5 @@
 .vs/
 CommunalServices/bin/
 CommunalServices/obj/
+CommunalServices.Tests/bin/
+CommunalServices.Tests/obj/
