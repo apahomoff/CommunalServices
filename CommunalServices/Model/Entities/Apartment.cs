@@ -12,8 +12,8 @@ namespace CommunalServices.Model.Entities
         public int HouseId { get; set; }
         public House House { get; set; }
         public int Number { get; set; }
-        public float Area { get; set; }
-        public DateTime DateReg { get; set; }
+        public float? Area { get; set; }
+        public DateTime? DateReg { get; set; }
         public List<RegistrationValue> RegistrationValues { get; set; }
     }
 }
