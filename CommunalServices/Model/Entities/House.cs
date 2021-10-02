@@ -12,8 +12,8 @@ namespace CommunalServices.Model.Entities
         public int StreetId { get; set; }
         public Street Street { get; set; }
         public string Number { get; set; }
-        public float AreaLiving { get; set; }
-        public float AreaMOP { get; set; }
+        public float? AreaLiving { get; set; }
+        public float? AreaMOP { get; set; }
         public List<Apartment> Apartments { get; set; }
         public List<ServiceHouse> ServiceHouses { get; set; }
     }
